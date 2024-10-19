@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "/home/Mark-74/development/music_app/linux"
+    "cmake.sourceDirectory": "/home/Mark-74/development/Music_App_Flutter/linux",
+    "java.configuration.updateBuildConfiguration": "automatic"
 }
