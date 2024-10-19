@@ -21,7 +21,10 @@ class _HomepageState extends State<Homepage> {
       ),
       body: Column(
         children: [
-          const SearchBar(),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: SearchBar(),
+          ),
           const SizedBox(height: 20),
           const Text('Favorite artists'),
           const SizedBox(height: 20),
