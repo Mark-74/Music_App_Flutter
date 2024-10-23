@@ -2,6 +2,9 @@
 This file contains the Database class, it contains static methods to access the database.
 The wrapping of the sqflite package was made to make it easier to use in the pages.
 */
+import 'dart:ffi';
+
+import 'package:flutter/material.dart';
 import 'package:music_app/utils/classes.dart';
 
 import 'package:path/path.dart';
@@ -36,10 +39,17 @@ class DbManager{
         await db.execute(
           'CREATE TABLE IF NOT EXISTS songsToPlaylists(id AUTO_INCREMENT, song_id INT, playlist_id INT)'
         );
+
+        //the artists table contains all the artists saved by the user
+        await db.execute(
+          'CREATE TABLE IF NOT EXISTS artists(id AUTO_INCREMENT, name TEXT, imageUrl TEXT)'
+        );
       },
       version: 1
     );
   }
+
+  //////////////////////////////// SONGS TABLE ////////////////////////////////
 
   static Future<List<Song>> getAllSongs() async{
     List<Map<String, Object?>> results = await db!.query('songs',);
@@ -107,5 +117,62 @@ class DbManager{
       'songs',
       song.toMap()
       );
+  }
+
+  static Future<void> removeSong(String title, String artist) async{
+    await db!.delete(
+      'songs',
+      where: 'title = ? AND artist = ?',
+      whereArgs: [title, artist]
+    );
+  }
+
+  //////////////////////////////// ARTISTS TABLE ////////////////////////////////
+  
+  static Future<List<Artist>> getArtists(int? limit) async{
+    List<Map<String, Object?>> results = limit != null ? await db!.query('artists', limit: limit) : await db!.query('artists');
+
+    List<Artist> output = [];
+    for(var line in results){
+      output.add(Artist(
+        line['name'] as String,
+        Uri.parse(line['imageUrl'] as String)
+      ));
+    }
+
+    return output;
+  }
+
+  static Future<void> addArtist(Artist artist) async{
+    print(getAllSongs());
+    await db!.insert(
+      'artists',
+      artist.toMap()
+    );
+  }
+
+  static Future<void> removeArtist(String name) async{
+    await db!.delete(
+      'artists',
+      where: 'name = ?',
+      whereArgs: [name]
+    );
+  }
+
+  static Future<List<Artist>> searchArtist(String query) async{
+    List<Map<String, Object?>> results = await db!.query(
+      'artists',
+      where: 'name = ?',
+      whereArgs: [query]);
+
+    List<Artist> output = [];
+    for(var line in results){
+      output.add(Artist(
+        line['name'] as String,
+        Uri.parse(line['imageUrl'] as String)
+      ));
+    }
+
+    return output;
   }
 }

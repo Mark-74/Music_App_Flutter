@@ -58,3 +58,17 @@ class UserPlaylist{
     };
   }
 }
+
+class Artist{
+  final String name;
+  final Uri? imageUrl;
+
+  Artist(this.name, this.imageUrl);
+
+  Map<String, String> toMap(){
+    return {
+      'name': name,
+      'imageUrl': imageUrl != null ? imageUrl.toString() : ''
+    };
+  }
+}

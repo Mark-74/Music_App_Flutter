@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 // widget imports
 import 'package:music_app/widgets/artist_widgets.dart';
+import 'package:music_app/widgets/wrappers.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -28,18 +29,18 @@ class _HomepageState extends State<Homepage> {
           const SizedBox(height: 20),
           const Text('Favorite artists'),
           const SizedBox(height: 20),
-          Row(
-            children: [
-              circleArtist('https://bayeight.com/wp-content/uploads/2022/01/what-is-asession-musician.jpg.webp', () {
-                print('Artist 1');
-              }),
-              circleArtist('https://bayeight.com/wp-content/uploads/2022/01/what-is-asession-musician.jpg.webp', () {
-                print('Artist 2');
-              }),
-              circleArtist('https://bayeight.com/wp-content/uploads/2022/01/what-is-asession-musician.jpg.webp', () {
-                print('Artist 3');
-              }),       
-            ]),
+          SizedBox(
+            height: 100,
+            child: FutureBuilder(
+              future: Wrapper.artistView(),
+              builder: (BuildContext context, AsyncSnapshot<ListView> snapshot){
+                if(snapshot.hasData){
+                  return snapshot.data!;
+                } else {
+                  return const CircularProgressIndicator();
+                }
+            }),
+          ),
           const Text('Your songs'),
           const SizedBox(height: 20),
           Row(
